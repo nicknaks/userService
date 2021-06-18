@@ -3,6 +3,7 @@ package delivery
 import (
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 	"userService/internal/pkg/models"
 	"userService/internal/pkg/user/usecase"
 )
@@ -48,8 +49,20 @@ func (UserDelivery) GetAllUsers(c echo.Context) error {
 	panic("implement me")
 }
 
-func (UserDelivery) GetUserById(c echo.Context) error {
-	panic("implement me")
+func (u UserDelivery) GetUserById(c echo.Context) error {
+	id := c.Param("id")
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid Id")
+	}
+
+	user, err := u.Usecase.GetUserById(intId)
+	if err != nil {
+		c.Logger().Info("Get User - " + err.Error())
+		return c.String(http.StatusNotFound, "Cant Find User")
+	}
+
+	return c.JSON(http.StatusOK, user)
 }
 
 func (UserDelivery) ChangeUserById(c echo.Context) error {
