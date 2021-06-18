@@ -65,8 +65,27 @@ func (u UserDelivery) GetUserById(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (UserDelivery) ChangeUserById(c echo.Context) error {
-	panic("implement me")
+func (u UserDelivery) ChangeUserById(c echo.Context) error {
+	id := c.Param("id")
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid Id")
+	}
+
+	reqUser := new(models.User)
+	err = c.Bind(&reqUser)
+	if err != nil {
+		c.Logger().Info("Change User - " + err.Error())
+		return c.String(http.StatusBadRequest, "Invalid Input")
+	}
+
+	user, err := u.Usecase.ChangeUser(*reqUser, intId)
+	if err != nil {
+		c.Logger().Info("Change User - " + err.Error())
+		return c.String(http.StatusBadRequest, "Invalid Input")
+	}
+
+	return c.JSON(http.StatusOK, user)
 }
 
 func (u UserDelivery) DeleteUser(c echo.Context) error {

@@ -9,10 +9,15 @@ type UserRepositoryInterface interface {
 	CreateUser(user models.User) (int, error)
 	GetUserById(id int) (models.User, error)
 	DeleteUser(id int) error
+	ChangeUser(user models.User) error
 }
 
 type UserRepository struct {
 	DB hare.Database
+}
+
+func (u *UserRepository) ChangeUser(user models.User) error {
+	return u.DB.Update("users", &user)
 }
 
 func (u *UserRepository) DeleteUser(id int) error {
