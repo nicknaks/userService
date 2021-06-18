@@ -8,10 +8,15 @@ import (
 type UserRepositoryInterface interface {
 	CreateUser(user models.User) (int, error)
 	GetUserById(id int) (models.User, error)
+	DeleteUser(id int) error
 }
 
 type UserRepository struct {
 	DB hare.Database
+}
+
+func (u *UserRepository) DeleteUser(id int) error {
+	return u.DB.Delete("users", id)
 }
 
 func (u *UserRepository) CreateUser(user models.User) (int, error) {

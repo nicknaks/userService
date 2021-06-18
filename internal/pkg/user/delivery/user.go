@@ -69,6 +69,18 @@ func (UserDelivery) ChangeUserById(c echo.Context) error {
 	panic("implement me")
 }
 
-func (UserDelivery) DeleteUser(c echo.Context) error {
-	panic("implement me")
+func (u UserDelivery) DeleteUser(c echo.Context) error {
+	id := c.Param("id")
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid Id")
+	}
+
+	err = u.Usecase.DeleteUser(intId)
+	if err != nil {
+		c.Logger().Info("Get User - " + err.Error())
+		return c.String(http.StatusNotFound, "Cant Find User")
+	}
+
+	return c.NoContent(http.StatusOK)
 }
