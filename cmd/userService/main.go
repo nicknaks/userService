@@ -1,31 +1,14 @@
 package main
 
 import (
-	"github.com/jameycribbs/hare"
-	"github.com/jameycribbs/hare/datastores/disk"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	log2 "github.com/labstack/gommon/log"
-	"log"
 	"userService/internal/pkg/user/delivery"
 	"userService/internal/pkg/user/repository"
 	"userService/internal/pkg/user/usecase"
+	"userService/internal/userService"
 )
-
-func initDB() *hare.Database {
-	ds, err := disk.New("./data", ".json")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	db, err := hare.New(ds)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	err = db.CreateTable("users")
-	return db
-}
 
 func setConfig(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -34,7 +17,7 @@ func setConfig(e *echo.Echo) {
 
 	e.Logger.SetLevel(log2.Lvl(0))
 
-	db := initDB()
+	db := userService.InitDB()
 
 	userRepository := repository.UserRepository{DB: *db}
 	userUsecase := usecase.UserUsecase{Repository: &userRepository}

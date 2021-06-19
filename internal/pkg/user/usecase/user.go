@@ -10,10 +10,15 @@ type UserUsecaseInterface interface {
 	GetUserById(id int) (models.User, error)
 	DeleteUser(id int) error
 	ChangeUser(user models.User, id int) (models.User, error)
+	GetAllUsers() ([]models.User, error)
 }
 
 type UserUsecase struct {
 	Repository repository.UserRepositoryInterface
+}
+
+func (u UserUsecase) GetAllUsers() ([]models.User, error) {
+	return u.Repository.GetAllUsers()
 }
 
 func (u UserUsecase) ChangeUser(user models.User, id int) (models.User, error) {

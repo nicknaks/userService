@@ -45,8 +45,15 @@ func (u UserDelivery) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (UserDelivery) GetAllUsers(c echo.Context) error {
-	panic("implement me")
+func (u UserDelivery) GetAllUsers(c echo.Context) error {
+	users, err := u.Usecase.GetAllUsers()
+
+	if err != nil {
+		c.Logger().Info("GetAllUser - " + err.Error())
+		return c.String(http.StatusBadRequest, "Error")
+	}
+
+	return c.JSON(http.StatusOK, users)
 }
 
 func (u UserDelivery) GetUserById(c echo.Context) error {
