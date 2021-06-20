@@ -20,7 +20,7 @@ func (u UserDelivery) SetRoutersForUser(e *echo.Echo) {
 	e.POST("/users", u.CreateUser)
 	e.GET("/users", u.GetAllUsers)
 	e.GET("/users/:id", u.GetUserById)
-	e.PATCH("/users/:id", u.ChangeUserById)
+	e.PUT("/users/:id", u.ChangeUserById)
 	e.DELETE("/users/:id", u.DeleteUser)
 }
 

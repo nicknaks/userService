@@ -106,7 +106,7 @@ func TestUserDelivery_ChangeUserById_Success(t *testing.T) {
 
 	//creating server
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPatch, "/users", strings.NewReader(`{"name":"New Jon Snow"}`))
+	req := httptest.NewRequest(http.MethodPut, "/users", strings.NewReader(`{"name":"New Jon Snow"}`))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 
@@ -143,7 +143,7 @@ func TestUserDelivery_ChangeUserById_Fail(t *testing.T) {
 
 	//creating server
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPatch, "/users", strings.NewReader(`{"name":"New Jon Snow"}`))
+	req := httptest.NewRequest(http.MethodPut, "/users", strings.NewReader(`{"name":"New Jon Snow"}`))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 
