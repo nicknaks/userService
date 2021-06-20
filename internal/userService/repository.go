@@ -6,8 +6,8 @@ import (
 	"log"
 )
 
-func InitDB() *hare.Database {
-	ds, err := disk.New("./data", ".json")
+func InitDB(tableName string, dir string) *hare.Database {
+	ds, err := disk.New(dir, ".json")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -17,6 +17,6 @@ func InitDB() *hare.Database {
 		log.Fatalln(err)
 	}
 
-	err = db.CreateTable("users")
+	err = db.CreateTable(tableName)
 	return db
 }

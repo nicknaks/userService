@@ -5,11 +5,11 @@ import (
 	"userService/internal/pkg/models"
 )
 
-func QueryEpisodes(db *hare.Database, queryFn func(u models.User) bool, limit int) ([]models.User, error) {
+func (u UserRepository) QueryEpisodes(db *hare.Database, queryFn func(u models.User) bool, limit int) ([]models.User, error) {
 	var results []models.User
 	var err error
 
-	ids, err := db.IDs("users")
+	ids, err := db.IDs(u.tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func QueryEpisodes(db *hare.Database, queryFn func(u models.User) bool, limit in
 	for _, id := range ids {
 		e := models.User{}
 
-		if err = db.Find("users", id, &e); err != nil {
+		if err = db.Find(u.tableName, id, &e); err != nil {
 			return nil, err
 		}
 
@@ -42,29 +42,34 @@ type UserRepositoryInterface interface {
 }
 
 type UserRepository struct {
-	DB hare.Database
+	DB        hare.Database
+	tableName string
+}
+
+func NewUserRepository(DB hare.Database, tableName string) *UserRepository {
+	return &UserRepository{DB: DB, tableName: tableName}
 }
 
 func (u *UserRepository) GetAllUsers() ([]models.User, error) {
-	return QueryEpisodes(&u.DB, func(u models.User) bool {
+	return u.QueryEpisodes(&u.DB, func(u models.User) bool {
 		return true
 	}, 0)
 }
 
 func (u *UserRepository) ChangeUser(user models.User) error {
-	return u.DB.Update("users", &user)
+	return u.DB.Update(u.tableName, &user)
 }
 
 func (u *UserRepository) DeleteUser(id int) error {
-	return u.DB.Delete("users", id)
+	return u.DB.Delete(u.tableName, id)
 }
 
 func (u *UserRepository) CreateUser(user models.User) (int, error) {
-	return u.DB.Insert("users", &user)
+	return u.DB.Insert(u.tableName, &user)
 }
 
 func (u *UserRepository) GetUserById(id int) (models.User, error) {
 	user := models.User{}
-	err := u.DB.Find("users", id, &user)
+	err := u.DB.Find(u.tableName, id, &user)
 	return user, err
 }
